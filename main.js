@@ -70,5 +70,7 @@ main
         document.addEventListener('DOMContentLoaded', function() {
             new Main().startup();
         }, false);
+    }else{
+        alert("他のブラウザかIE９以降でごらんください。");
     }
 }());
