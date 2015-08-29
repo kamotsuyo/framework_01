@@ -27,7 +27,7 @@ main
         },
         startup: function() {
             //ここに記述
-            this.include(["test1.js","test2.js"],this);
+            this.include(["test1.js","test2.js"]);
         },
         parseDom: function(text) {
             var dom = document.createElement('dom');
@@ -40,21 +40,27 @@ main
             targetElement.addEventListener(newtype, this, false);
             targetElement.dispatchEvent(evt);
         },
-        include:function(list,caller){
+        include:function(list){
+            console.log(this);
             var counter = 0;
             var callback = function(evt){
-                console.log(evt.target);
+                // console.log(evt.target);
+                console.log(this);
                 counter++;
                 if(list.length===counter){
                     //今回targetElementは利用しないのでdocumentとしておく。
-                    caller.dispatchEvent("scriptsLoaded",document);
+                    this.dispatchEvent("scriptsLoaded",document);
                 }
             };
             for(var i=0;i<list.length;i++){
                 var s = document.getElementsByTagName("script")[0];
                 var script = document.createElement('script');
                 script.src = list[i];
-                script.addEventListener('load',callback,false);
+
+                var _this=this; //***
+                script.addEventListener('load',function(){
+                    callback.call(_this);
+                },false);
                 s.parentNode.insertBefore(script, s);
             }
         }
